@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ── Brand Colors ──────────────────────────────────── -->
+    <Color x:Key="SolarOrange">#FF9800</Color>
+    <Color x:Key="SolarOrangeDark">#E68A00</Color>
+    <Color x:Key="SolarOrangeLight">#FFB74D</Color>
+
+    <!-- ── Dark Theme ────────────────────────────────────── -->
+    <Color x:Key="DarkBackground">#1a1a2e</Color>
+    <Color x:Key="CardBackground">#16213e</Color>
+    <Color x:Key="SurfaceColor">#0f3460</Color>
+
+    <!-- ── Text Colors ───────────────────────────────────── -->
+    <Color x:Key="TextLight">#e0e0e0</Color>
+    <Color x:Key="TextMuted">#888888</Color>
+    <Color x:Key="TextHeading">White</Color>
+
+    <!-- ── Status Colors ─────────────────────────────────── -->
+    <Color x:Key="StatusGreen">#4CAF50</Color>
+    <Color x:Key="StatusYellow">#FFC107</Color>
+    <Color x:Key="StatusRed">#F44336</Color>
+    <Color x:Key="StatusBlue">#2196F3</Color>
+
+    <!-- ── Battery Gradient References ───────────────────── -->
+    <Color x:Key="BatteryHigh">#4CAF50</Color>
+    <Color x:Key="BatteryMedium">#FF9800</Color>
+    <Color x:Key="BatteryLow">#F44336</Color>
+
+    <!-- ── Shell Colors (iOS/Android chrome) ─────────────── -->
+    <Color x:Key="Primary">#FF9800</Color>
+    <Color x:Key="PrimaryDark">#E68A00</Color>
+    <Color x:Key="Accent">#FFB74D</Color>
+    <Color x:Key="Secondary">#0f3460</Color>
+
+    <!-- Tab bar -->
+    <Color x:Key="TabBarBackground">#0d1b2a</Color>
+
+</ResourceDictionary>

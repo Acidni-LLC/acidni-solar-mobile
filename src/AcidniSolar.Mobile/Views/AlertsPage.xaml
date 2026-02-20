@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AcidniSolar.Mobile.ViewModels"
+             x:Class="AcidniSolar.Mobile.Views.AlertsPage"
+             x:DataType="vm:AlertsViewModel"
+             Title="Alerts"
+             BackgroundColor="{StaticResource DarkBackground}">
+
+    <RefreshView Command="{Binding LoadAlertsCommand}"
+                 IsRefreshing="{Binding IsRefreshing}"
+                 RefreshColor="{StaticResource SolarOrange}">
+        <CollectionView ItemsSource="{Binding Alerts}"
+                        EmptyView="No alerts — your system is running great! ☀️">
+            <CollectionView.EmptyViewTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Padding="40" Spacing="16"
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                        <Label Text="✅" FontSize="48" HorizontalOptions="Center" />
+                        <Label Text="No Alerts"
+                               FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource TextLight}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Your solar system is running great!"
+                               FontSize="14"
+                               TextColor="{StaticResource TextMuted}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.EmptyViewTemplate>
+
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="16,16,16,8">
+                    <Label Text="🔔 System Alerts"
+                           FontSize="22" FontAttributes="Bold"
+                           TextColor="{StaticResource TextLight}" />
+                    <Label Text="{Binding Alerts.Count, StringFormat='{0} alert(s)'}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextMuted}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:SolarAlert"
+                              xmlns:models="clr-namespace:AcidniSolar.Mobile.Models">
+                    <Frame Margin="16,4"
+                           Padding="14"
+                           BackgroundColor="{StaticResource CardBackground}"
+                           BorderColor="Transparent"
+                           CornerRadius="10">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <!-- Severity Icon -->
+                            <Frame WidthRequest="36" HeightRequest="36"
+                                   CornerRadius="18" Padding="0"
+                                   BackgroundColor="{Binding SeverityColor}"
+                                   VerticalOptions="Start">
+                                <Label Text="{Binding Severity, Converter={StaticResource SeverityToIconConverter}}"
+                                       FontSize="16"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="{Binding Message}"
+                                       FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextLight}"
+                                       LineBreakMode="WordWrap" />
+                                <Label Text="{Binding TimeAgo}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextMuted}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+
+</ContentPage>

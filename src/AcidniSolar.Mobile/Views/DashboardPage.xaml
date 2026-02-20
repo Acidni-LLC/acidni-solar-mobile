@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AcidniSolar.Mobile.ViewModels"
+             x:Class="AcidniSolar.Mobile.Views.DashboardPage"
+             x:DataType="vm:DashboardViewModel"
+             Title="Dashboard"
+             BackgroundColor="{StaticResource DarkBackground}">
+
+    <RefreshView Command="{Binding RefreshCommand}"
+                 IsRefreshing="{Binding IsRefreshing}"
+                 RefreshColor="{StaticResource SolarOrange}">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="16">
+
+                <!-- ── Status Header ─────────────────────────── -->
+                <Grid ColumnDefinitions="*,Auto" Padding="0,8,0,0">
+                    <Label Text="☀️ Acidni Solar"
+                           FontSize="24" FontAttributes="Bold"
+                           TextColor="{StaticResource SolarOrange}" />
+                    <Label Grid.Column="1"
+                           Text="{Binding LastUpdated}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextMuted}"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <!-- ── Offline Banner ────────────────────────── -->
+                <Frame IsVisible="{Binding IsOffline}"
+                       BackgroundColor="#44FF5722"
+                       BorderColor="Transparent"
+                       Padding="12" CornerRadius="8">
+                    <Label Text="📡 You are offline. Showing last cached data."
+                           TextColor="{StaticResource TextLight}"
+                           FontSize="14" />
+                </Frame>
+
+                <!-- ── Not Configured Banner ─────────────────── -->
+                <Frame IsVisible="{Binding IsConfigured, Converter={StaticResource InvertedBoolConverter}}"
+                       BackgroundColor="#44FF9800"
+                       BorderColor="Transparent"
+                       Padding="16" CornerRadius="12">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🔑 Setup Required"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="Enter your Solar API key in Settings to start monitoring."
+                               TextColor="White" FontSize="14" />
+                        <Button Text="Go to Settings"
+                                Command="{Binding NavigateToSettingsCommand}"
+                                BackgroundColor="{StaticResource SolarOrange}"
+                                TextColor="{StaticResource DarkBackground}"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                HeightRequest="44" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- ── Loading Indicator ─────────────────────── -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="{StaticResource SolarOrange}"
+                                   HeightRequest="40" />
+
+                <!-- ── Solar Production Card ─────────────────── -->
+                <Frame BackgroundColor="{StaticResource CardBackground}"
+                       BorderColor="Transparent"
+                       CornerRadius="12" Padding="16"
+                       IsVisible="{Binding IsConfigured}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Text="☀️" FontSize="32" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Solar Production"
+                                   FontSize="12" TextColor="{StaticResource TextMuted}" />
+                            <Label Text="{Binding SolarPowerDisplay}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="{StaticResource SolarOrange}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center"
+                                             HorizontalOptions="End">
+                            <Label Text="Today"
+                                   FontSize="10" TextColor="{StaticResource TextMuted}"
+                                   HorizontalOptions="End" />
+                            <Label Text="{Binding TodayProductionDisplay}"
+                                   FontSize="14" TextColor="{StaticResource TextLight}"
+                                   HorizontalOptions="End" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- ── Battery & Grid Row ────────────────────── -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12"
+                      IsVisible="{Binding IsConfigured}">
+
+                    <!-- Battery Card -->
+                    <Frame BackgroundColor="{StaticResource CardBackground}"
+                           BorderColor="Transparent"
+                           CornerRadius="12" Padding="16">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="🔋 Battery" FontSize="12"
+                                   TextColor="{StaticResource TextMuted}" />
+                            <Label Text="{Binding BatteryDisplay}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="{Binding BatteryColor}" />
+                            <ProgressBar Progress="{Binding BatterySOC, Converter={StaticResource PercentToProgressConverter}}"
+                                         ProgressColor="{Binding BatteryColor}"
+                                         HeightRequest="6" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Grid Card -->
+                    <Frame Grid.Column="1"
+                           BackgroundColor="{StaticResource CardBackground}"
+                           BorderColor="Transparent"
+                           CornerRadius="12" Padding="16">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="⚡ Grid" FontSize="12"
+                                   TextColor="{StaticResource TextMuted}" />
+                            <Label Text="{Binding GridStatusDisplay}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{Binding IsGridConnected, Converter={StaticResource BoolToGridColorConverter}}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- ── Home Consumption Card ─────────────────── -->
+                <Frame BackgroundColor="{StaticResource CardBackground}"
+                       BorderColor="Transparent"
+                       CornerRadius="12" Padding="16"
+                       IsVisible="{Binding IsConfigured}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Text="🏠" FontSize="32" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Home Consumption"
+                                   FontSize="12" TextColor="{StaticResource TextMuted}" />
+                            <Label Text="{Binding ConsumptionDisplay}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextLight}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center"
+                                             HorizontalOptions="End">
+                            <Label Text="Today"
+                                   FontSize="10" TextColor="{StaticResource TextMuted}"
+                                   HorizontalOptions="End" />
+                            <Label Text="{Binding TodayConsumptionDisplay}"
+                                   FontSize="14" TextColor="{StaticResource TextLight}"
+                                   HorizontalOptions="End" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- ── Self-Sufficiency Card ─────────────────── -->
+                <Frame BackgroundColor="{StaticResource CardBackground}"
+                       BorderColor="Transparent"
+                       CornerRadius="12" Padding="16"
+                       IsVisible="{Binding IsConfigured}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🌿 Self-Sufficiency"
+                               FontSize="12" TextColor="{StaticResource TextMuted}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <ProgressBar Progress="{Binding SelfSufficiency, Converter={StaticResource PercentToProgressConverter}}"
+                                         ProgressColor="LimeGreen"
+                                         HeightRequest="8" VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding SelfSufficiency, StringFormat='{0:N0}%'}"
+                                   FontSize="20" FontAttributes="Bold"
+                                   TextColor="LimeGreen" Margin="12,0,0,0" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- ── Error Message ─────────────────────────── -->
+                <Label Text="{Binding ErrorMessage}"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                       TextColor="OrangeRed" FontSize="14"
+                       HorizontalOptions="Center" Margin="0,8" />
+
+                <!-- ── Version Footer ────────────────────────── -->
+                <Label Text="Acidni Solar v20260220-1800"
+                       FontSize="10"
+                       TextColor="{StaticResource TextMuted}"
+                       HorizontalOptions="Center"
+                       Margin="0,16,0,0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+
+</ContentPage>

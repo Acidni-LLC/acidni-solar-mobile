@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AcidniSolar.Mobile.ViewModels"
+             x:Class="AcidniSolar.Mobile.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings"
+             BackgroundColor="{StaticResource DarkBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Label Text="⚙️ Settings"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextLight}"
+                   Margin="0,8,0,0" />
+
+            <!-- ── API Key Section ────────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="🔑 API Key"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextLight}" />
+                    <Label Text="Enter your Solar API key from the web portal."
+                           FontSize="12" TextColor="{StaticResource TextMuted}" />
+
+                    <Entry Placeholder="Paste your API key"
+                           Text="{Binding ApiKeyInput}"
+                           IsPassword="True"
+                           BackgroundColor="{StaticResource DarkBackground}"
+                           TextColor="{StaticResource TextLight}"
+                           PlaceholderColor="{StaticResource TextMuted}"
+                           FontSize="14" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Text="Validate &amp; Save"
+                                Command="{Binding SaveApiKeyCommand}"
+                                BackgroundColor="{StaticResource SolarOrange}"
+                                TextColor="{StaticResource DarkBackground}"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                HeightRequest="44" />
+                        <Button Grid.Column="1"
+                                Text="Clear Key"
+                                Command="{Binding ClearApiKeyCommand}"
+                                BackgroundColor="Transparent"
+                                BorderColor="{StaticResource TextMuted}"
+                                BorderWidth="1"
+                                TextColor="{StaticResource TextMuted}"
+                                CornerRadius="8"
+                                HeightRequest="44" />
+                    </Grid>
+
+                    <!-- Status message -->
+                    <Label Text="{Binding StatusMessage}"
+                           IsVisible="{Binding StatusMessage, Converter={StaticResource StringToBoolConverter}}"
+                           FontSize="13"
+                           TextColor="{Binding IsKeyValid, Converter={StaticResource BoolToStatusColorConverter}}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Preferences Section ────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="📊 Preferences"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextLight}" />
+
+                    <!-- Refresh Interval -->
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <Label Text="Auto-refresh interval"
+                               FontSize="14" TextColor="{StaticResource TextLight}"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="{Binding RefreshIntervalSeconds, StringFormat='{0}s'}"
+                               FontSize="14" TextColor="{StaticResource SolarOrange}"
+                               VerticalOptions="Center" />
+                        <Slider Grid.Row="1" Grid.ColumnSpan="2"
+                                Minimum="10" Maximum="120"
+                                Value="{Binding RefreshIntervalSeconds}"
+                                MinimumTrackColor="{StaticResource SolarOrange}"
+                                MaximumTrackColor="{StaticResource TextMuted}"
+                                ThumbColor="{StaticResource SolarOrange}" />
+                    </Grid>
+
+                    <!-- Notifications -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Push Notifications"
+                                   FontSize="14" TextColor="{StaticResource TextLight}" />
+                            <Label Text="Receive alerts for system events"
+                                   FontSize="11" TextColor="{StaticResource TextMuted}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding NotificationsEnabled}"
+                                OnColor="{StaticResource SolarOrange}"
+                                ThumbColor="White" />
+                    </Grid>
+
+                    <!-- Temperature Unit -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Temperature Unit"
+                               FontSize="14" TextColor="{StaticResource TextLight}"
+                               VerticalOptions="Center" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Button Text="°F"
+                                    Command="{Binding SetTempUnitCommand}"
+                                    CommandParameter="F"
+                                    BackgroundColor="{Binding TempUnit, Converter={StaticResource TempUnitToColorConverter}, ConverterParameter=F}"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    WidthRequest="48" HeightRequest="36"
+                                    FontSize="14" Padding="0" />
+                            <Button Text="°C"
+                                    Command="{Binding SetTempUnitCommand}"
+                                    CommandParameter="C"
+                                    BackgroundColor="{Binding TempUnit, Converter={StaticResource TempUnitToColorConverter}, ConverterParameter=C}"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    WidthRequest="48" HeightRequest="36"
+                                    FontSize="14" Padding="0" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── About Section ──────────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="ℹ️ About"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource TextLight}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="App Version"
+                               FontSize="14" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1"
+                               Text="v20260220-1800"
+                               FontSize="14" TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Server Version"
+                               FontSize="14" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding ServerVersion}"
+                               FontSize="14" TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+
+                    <Button Text="🌐 Open Web Portal"
+                            Command="{Binding OpenPortalCommand}"
+                            BackgroundColor="Transparent"
+                            BorderColor="{StaticResource SolarOrange}"
+                            BorderWidth="1"
+                            TextColor="{StaticResource SolarOrange}"
+                            CornerRadius="8"
+                            HeightRequest="44"
+                            Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Footer ─────────────────────────────────── -->
+            <Label Text="Acidni Solar v20260220-1800"
+                   FontSize="10"
+                   TextColor="{StaticResource TextMuted}"
+                   HorizontalOptions="Center"
+                   Margin="0,8,0,16" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

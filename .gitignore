@@ -1,0 +1,38 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# Visual Studio
+.vs/
+*.csproj.user
+*.rsuser
+
+# macOS
+.DS_Store
+*.swp
+*~.nib
+
+# Rider
+.idea/
+
+# Build
+artifacts/
+
+# MAUI specific
+*.ipa
+*.apk
+*.aab

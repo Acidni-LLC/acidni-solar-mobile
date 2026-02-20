@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AcidniSolar.Mobile.ViewModels"
+             x:Class="AcidniSolar.Mobile.Views.SystemDetailPage"
+             x:DataType="vm:SystemDetailViewModel"
+             Title="System Details"
+             BackgroundColor="{StaticResource DarkBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Label Text="📋 System Details"
+                   FontSize="24" FontAttributes="Bold"
+                   TextColor="{StaticResource TextLight}"
+                   Margin="0,8,0,0" />
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource SolarOrange}"
+                               HeightRequest="40" />
+
+            <!-- ── Inverter Details ───────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16"
+                   IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="⚡ Inverter"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource SolarOrange}" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+                        <Label Text="PV Power" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1" Text="{Binding PvPowerDisplay}"
+                               TextColor="{StaticResource SolarOrange}" FontAttributes="Bold" />
+
+                        <Label Grid.Row="1" Text="PV Voltage" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding PvVoltageDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="2" Text="AC Output" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding AcOutputDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="3" Text="Frequency" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding FrequencyDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="4" Text="Temperature" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding InverterTempDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Battery Details ────────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16"
+                   IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🔋 Battery Bank"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="LimeGreen" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+                        <Label Text="State of Charge" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1" Text="{Binding BatterySocDisplay}"
+                               TextColor="LimeGreen" FontAttributes="Bold" />
+
+                        <Label Grid.Row="1" Text="Voltage" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding BatteryVoltageDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="2" Text="Current" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding BatteryCurrentDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="3" Text="Power" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding BatteryPowerDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="4" Text="Temperature" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding BatteryTempDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Grid Details ───────────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16"
+                   IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🔌 Grid Connection"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="DodgerBlue" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                        <Label Text="Status" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1" Text="{Binding GridStatusText}"
+                               TextColor="{Binding IsGridConnected, Converter={StaticResource BoolToGridColorConverter}}"
+                               FontAttributes="Bold" />
+
+                        <Label Grid.Row="1" Text="Grid Voltage" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding GridVoltageDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="2" Text="Import Power" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding GridImportDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+
+                        <Label Grid.Row="3" Text="Export Power" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding GridExportDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Load Details ───────────────────────────── -->
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   BorderColor="Transparent"
+                   CornerRadius="12" Padding="16"
+                   IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🏠 Load"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="Coral" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8">
+                        <Label Text="Total Load" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Column="1" Text="{Binding TotalLoadDisplay}"
+                               TextColor="Coral" FontAttributes="Bold" />
+
+                        <Label Grid.Row="1" Text="Load Percentage" TextColor="{StaticResource TextLight}" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding LoadPercentDisplay}"
+                               TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ── Error Message ──────────────────────────── -->
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   TextColor="OrangeRed" FontSize="14"
+                   HorizontalOptions="Center" Margin="0,8" />
+
+            <Label Text="Acidni Solar v20260220-1800"
+                   FontSize="10"
+                   TextColor="{StaticResource TextMuted}"
+                   HorizontalOptions="Center"
+                   Margin="0,8,0,16" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

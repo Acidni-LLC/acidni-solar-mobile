@@ -1,0 +1,106 @@
+name: Build Acidni Solar Mobile
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: 'src/AcidniSolar.Mobile/AcidniSolar.Mobile.csproj'
+
+jobs:
+  # ────────────────────────────────────────────────────────
+  # Android Build
+  # ────────────────────────────────────────────────────────
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-android
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Build Android
+        run: |
+          dotnet build ${{ env.PROJECT_PATH }} \
+            -c Release \
+            -f net8.0-android \
+            --no-restore
+
+      - name: Publish Android APK
+        run: |
+          dotnet publish ${{ env.PROJECT_PATH }} \
+            -c Release \
+            -f net8.0-android \
+            -o ./artifacts/android
+
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: ./artifacts/android/**/*.apk
+          retention-days: 30
+
+  # ────────────────────────────────────────────────────────
+  # iOS Build (requires macOS runner)
+  # ────────────────────────────────────────────────────────
+  build-ios:
+    name: Build iOS
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-ios
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Build iOS (Simulator)
+        run: |
+          dotnet build ${{ env.PROJECT_PATH }} \
+            -c Release \
+            -f net8.0-ios \
+            /p:RuntimeIdentifier=iossimulator-arm64 \
+            /p:_BundlerDebug=false \
+            --no-restore
+
+      # ── App Store submission (uncomment when signing is configured) ──
+      # - name: Build iOS (Device / App Store)
+      #   run: |
+      #     dotnet publish ${{ env.PROJECT_PATH }} \
+      #       -c Release \
+      #       -f net8.0-ios \
+      #       /p:RuntimeIdentifier=ios-arm64 \
+      #       /p:CodesignKey="${{ secrets.IOS_SIGNING_KEY }}" \
+      #       /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE }}" \
+      #       /p:ArchiveOnBuild=true \
+      #       -o ./artifacts/ios
+
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: |
+            **/bin/Release/net8.0-ios/**/*.app
+          retention-days: 30
